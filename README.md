@@ -6,3 +6,6 @@ The Chinook-Database is a open source database sample that can be easily downloa
 ## Chinook Entity Relationship Diagram 
 
 ![Alt text](images/chinook_erd.png?raw=true "Title")
+
+### BLOGS
+Check out my blogs of SQL <a href="https://medium.com/@mandoiwanaga08">here</a>.
