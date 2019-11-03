@@ -23,7 +23,41 @@ FROM InvoiceLine
 LIMIT 10;
 
 
-SELECT ArtistId, 
-COUNT(Title) OVER(PARTITION BY ArtistId) 
-FROM Album
-LIMIT 10;
+-- Example query using NTILE window function
+SELECT Name,
+Milliseconds,
+NTILE(4) OVER(ORDER BY Milliseconds) AS percentile
+FROM Track
+WHERE AlbumId = 5;
+
+
+--- Example query using LAG window function
+--- monthly change
+WITH monthly_sales AS (
+    SELECT strftime('%m', InvoiceDate) AS month,
+    ROUND(SUM(Total)) AS total_sales
+    FROM Invoice
+    GROUP BY month
+    ORDER BY month
+)
+
+SELECT month, 
+total_sales,
+total_sales - LAG(total_sales, 1) OVER(ORDER BY month) AS monthly_change 
+FROM monthly_sales;
+
+
+--- Example query using LAG window function to find monthly percent change
+--- ((x/y)-1)*100 
+WITH monthly_sales AS (
+    SELECT strftime('%m', InvoiceDate) AS month,
+    ROUND(SUM(Total)) AS total_sales
+    FROM Invoice
+    GROUP BY month
+    ORDER BY month
+)
+
+SELECT month, 
+total_sales,
+ROUND(((total_sales/LAG(total_sales, 1) OVER (ORDER BY month)) - 1) * 100, 2) AS percent_change 
+FROM monthly_sales;
